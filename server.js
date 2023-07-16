@@ -1,72 +1,95 @@
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
+const mongoose = require('mongoose');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-// Code blocks data
-const codeBlocks = [
-    { id: 1, title: 'Code Block 1', code: 'console.log("Code block 1");' },
-    { id: 2, title: 'Code Block 2', code: 'console.log("Code block 2");' },
-    { id: 3, title: 'Code Block 3', code: 'console.log("Code block 3");' },
-    { id: 4, title: 'Code Block 4', code: 'console.log("Code block 4");' },
-];
+// Connect to MongoDB
+mongoose
+    .connect('mongodb://localhost:27017/coding_app', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => {
+        console.log('Connected to MongoDB');
+    })
+    .catch((error) => {
+        console.error('Failed to connect to MongoDB:', error);
+    });
 
+// Define the CodeBlock schema
+const codeBlockSchema = new mongoose.Schema({
+    name: String,
+    code: String,
+    solution: String,
+});
+
+// Create the CodeBlock model
+const CodeBlock = mongoose.model('CodeBlock', codeBlockSchema);
+
+// Serve static files from the "frontend/build" directory
 app.use(express.static('frontend/build'));
 
+// Serve the lobby page
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/frontend/build/index.html');
 });
 
-// Socket.IO connection handling
+// API endpoint to fetch code blocks
+app.get('/api/codeblocks', async (req, res) => {
+    try {
+        const codeBlocks = await CodeBlock.find({}, { solution: 0 });
+        res.json(codeBlocks);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// API endpoint to fetch a specific code block by ID
+app.get('/api/codeblocks/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const codeBlock = await CodeBlock.findById(id);
+        if (codeBlock) {
+            res.json(codeBlock);
+        } else {
+            res.status(404).json({ error: 'Code block not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Socket.io event handling
 io.on('connection', (socket) => {
     console.log('A user connected');
 
-    // Mentor joining the code block
-    socket.on('mentorJoin', (id) => {
-        const codeBlock = codeBlocks.find((block) => block.id === id);
-        if (codeBlock) {
-            socket.emit('codeUpdate', codeBlock.code);
+    // Listen for code updates from the student
+    socket.on('codeUpdate', async ({ id, code }) => {
+        try {
+            const codeBlock = await CodeBlock.findById(id);
+            if (codeBlock) {
+                codeBlock.code = code;
+                await codeBlock.save();
+
+                // Broadcast the code update to all connected clients (including the mentor)
+                io.emit('codeUpdate', { id, code });
+            }
+        } catch (error) {
+            console.error('Failed to update code:', error);
         }
     });
 
-    // Student joining the code block
-    socket.on('studentJoined', (id) => {
-        const codeBlock = codeBlocks.find((block) => block.id === id);
-        if (codeBlock) {
-            socket.join(`codeBlock-${id}`);
-        }
-    });
-
-    // Code updates from mentor
-    socket.on('codeUpdate', ({ id, code }) => {
-        const codeBlock = codeBlocks.find((block) => block.id === id);
-        if (codeBlock) {
-            codeBlock.code = code;
-            io.to(`codeBlock-${id}`).emit('codeUpdate', code);
-        }
-    });
-
-    // Disconnect event
+    // Disconnect event handling
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });
 });
 
-
 const port = 3001; // Choose a port number of your choice
 server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-});
-
-app.get('/api/codeblocks/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const codeBlock = codeBlocks.find((block) => block.id === id);
-    if (codeBlock) {
-        res.json({ code: codeBlock.code });
-    } else {
-        res.status(404).json({ error: 'Code block not found' });
-    }
 });

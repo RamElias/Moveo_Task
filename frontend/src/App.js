@@ -1,18 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LobbyPage from './components/LobbyPage';
 import CodeBlockPage from './components/CodeBlockPage';
 
 function App() {
     return (
         <Router>
-            <Switch>
-                <Route exact path="/" component={LobbyPage} />
-                <Route path="/codeblock/:id" component={CodeBlockPage} />
-            </Switch>
+            <Routes>
+                <Route exact path="/" element={<LobbyPage />} />
+                <Route path="/codeblock/:id" element={<CodeBlockPage />} />
+            </Routes>
         </Router>
     );
 }
-
 
 export default App;

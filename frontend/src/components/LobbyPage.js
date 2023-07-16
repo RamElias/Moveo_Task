@@ -1,22 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function LobbyPage() {
-    const codeBlocks = [
+    const [codeBlocks, setCodeBlocks] = useState([
         { id: 1, name: 'Async case' },
         { id: 2, name: 'Event handling' },
         { id: 3, name: 'Data manipulation' },
-        { id: 4, name: 'Promises' },
-    ];
+        { id: 4, name: 'Promises' }]);
 
-    const renderCodeBlocks = () => {
-        return codeBlocks.map((codeBlock) => (
-            <li key={codeBlock.id}>
-                <Link to={`/codeblock/${codeBlock.id}`}>{codeBlock.title}</Link>
-            </li>
-        ));
-    };
+    useEffect(() => {
+        const fetchCodeBlocks = async () => {
+            try {
+                const response = await fetch('/codeblocks'); // Replace '/api/codeblocks' with your server's code block endpoint
+                const data = await response.json();
+                if (response.ok) {
+                    setCodeBlocks(data);
+                } else {
+                    // Handle error scenario
+                }
+            } catch (error) {
+                // Handle error scenario
+            }
+        };
 
+        fetchCodeBlocks();
+    }, []);
 
     return (
         <div>
