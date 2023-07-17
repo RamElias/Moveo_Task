@@ -1,18 +1,19 @@
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
-const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-// Serve static files from the "client/build" directory
-app.use(express.static('client/build'));
+const cors = require('cors');
+
+app.use(cors());
+
 
 // Serve the lobby page
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/client/build/index.html');
+
 });
 
 // Define code blocks
@@ -57,7 +58,7 @@ io.on('connection', (socket) => {
     });
 });
 
-const port = 3001; // Choose a port number of your choice
+const port = 5000; // Choose a port number of your choice
 server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
