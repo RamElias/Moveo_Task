@@ -1,35 +1,75 @@
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
+const mysql = require('mysql');
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-// Define code blocks
-const codeBlocks = [
-    { id: 1, title: 'Async case', code: 'console.log("Async case code"); function foo() return null;' },
-    { id: 2, title: 'Event handling', code: 'console.log("Event handling code");' },
-    { id: 3, title: 'Data manipulation', code: 'console.log("Data manipulation code");' },
-    { id: 4, title: 'Promises', code: 'console.log("Promises code");' },
-];
-
-// API endpoint to fetch code blocks
-app.get('/api/codeblocks', (req, res) => {
-    const codeBlockList = codeBlocks.map(({ id, title }) => ({ id, title }));
-    res.json(codeBlockList);
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'moveo_task',
 });
 
-// API endpoint to fetch a specific code block by ID
-app.get('/api/codeblocks/:id', (req, res) => {
-    const { id } = req.params;
-    const codeBlock = codeBlocks.find((block) => block.id === parseInt(id));
-    if (codeBlock) {
-        res.json(codeBlock);
+// Connect to the MySQL database
+db.connect((err) => {
+    if (err) {
+        console.error('Error connecting to MySQL database:', err);
     } else {
-        res.status(404).json({ error: 'Code block not found' });
+        console.log('Connected to the MySQL database');
     }
 });
+
+// API endpoint to fetch code blocks from the database
+app.get('/api/codeblocks', (req, res) => {
+    const query = 'SELECT id, title FROM code_blocks';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching code blocks:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+// API endpoint to fetch a specific code block by ID from the database
+app.get('/api/codeblocks/:id', (req, res) => {
+    const { id } = req.params;
+    const query = 'SELECT id, title, code, solution FROM code_blocks WHERE id = ?';
+    db.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Error fetching code block:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        } else if (results.length === 0) {
+            res.status(404).json({ error: 'Code block not found' });
+        } else {
+            const codeBlock = results[0];
+            res.json(codeBlock);
+        }
+    });
+});
+
+// Define code blocks
+let codeBlocks = [];
+
+// Fetch code blocks from the database and store them in the codeBlocks array
+const fetchCodeBlocks = () => {
+    const query = 'SELECT id, title, code, solution FROM code_blocks';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching code blocks:', err);
+        } else {
+            codeBlocks = results;
+        }
+    });
+};
+
+// Call fetchCodeBlocks function when the server starts
+fetchCodeBlocks();
 
 // WebSocket event handling
 wss.on('connection', (ws) => {
