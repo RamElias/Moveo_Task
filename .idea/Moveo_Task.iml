@@ -5,5 +5,8 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="default" level="application" />
+    <orderEntry type="library" name="monokai" level="application" />
+    <orderEntry type="library" name="javascript" level="application" />
   </component>
 </module>

@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
 import LobbyPage from './components/LobbyPage';
 import CodeBlockPage from './components/CodeBlockPage';
+import '../node_modules/highlight.js/styles/magula.css'
 
 function App() {
     return (
