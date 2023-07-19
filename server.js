@@ -99,6 +99,6 @@ wss.on('connection', (ws) => {
 });
 
 const port = 5000; // Choose a port number of your choice
-server.listen(port, () => {
+server.listen(port || '0.0.0.0', () => {
     console.log(`Server is running on port ${port}`);
 });
