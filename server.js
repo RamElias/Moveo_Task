@@ -8,10 +8,12 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: 'containers-us-west-110.railway.app',
     user: 'root',
-    password: '',
-    database: 'moveo_task',
+    password: 'I0tDtu14ZUaDrwzHebAs',
+    port: '7696',
+    database: 'railway',
+    protocol: 'tcp'
 });
 
 // Connect to the MySQL database

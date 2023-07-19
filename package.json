@@ -4,6 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "build": "npm install",
     "proxy": "http://localhost:5000"
   },
   "keywords": [],
@@ -18,7 +19,8 @@
     "mongoose": "^7.3.4",
     "mysql": "^2.18.1",
     "redis": "^4.6.7",
-    "socket.io": "^4.3.1"
+    "socket.io": "^4.3.1",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "mysql2": "^3.5.2"
