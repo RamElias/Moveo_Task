@@ -6,7 +6,7 @@
     "start-client": "cd client && npm start",
     "start-server": "node server.js",
     "build": "npm install",
-    "proxy": "http://localhost:5000"
+    "proxy": "https://moveotask.up.railway.app/"
   },
   "keywords": [],
   "author": "",

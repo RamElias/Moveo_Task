@@ -35,6 +35,7 @@ app.get('/api/codeblocks', (req, res) => {
             res.status(500).json({ error: 'Internal server error' });
         } else {
             res.json(results);
+            console.log('Request URL path:', req.url);
         }
     });
 });
