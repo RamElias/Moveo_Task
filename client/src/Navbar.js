@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     const [isNavbarOpen, setNavbarOpen] = useState(false);
@@ -9,42 +9,30 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light" style={{ backgroundColor: '#e3f2fd' }}>
+        <nav className="navbar navbar-expand-lg navbar-light"
+             style= {{ backgroundImage: 'linear-gradient(to right, #4e61fe, #0097ff, #00beff, #62def8, #c5f8f6)',
+                       borderBottom: '2px solid #85C1E9'}}>
             <div className="container">
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    onClick={toggleNavbar}
+                >
+                    <span className="navbar-toggler-icon" />
+                </button>
 
-                <div className={`navbar-collapse ${isNavbarOpen ? 'show' : ''}`}>
-                    <ul className="navbar-nav ml-auto">
+                <div className={`collapse navbar-collapse ${isNavbarOpen ? 'show' : ''}`}>
+                    <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
                             <Link className="nav-link" to="/">
-                                <span style={{ fontSize: '30px' }}>Home</span>
+                                Home
                             </Link>
                         </li>
-                        {/*<li className="nav-item">*/}
-                        {/*    <Link className="nav-link" to="/codeblock1">*/}
-                        {/*        <span style={{ fontSize: '30px' }}>mission 1</span>*/}
-                        {/*    </Link>*/}
-                        {/*</li>*/}
-                        {/*<li className="nav-item">*/}
-                        {/*    <Link className="nav-link" to="/codeblock2">*/}
-                        {/*        <span style={{ fontSize: '30px' }}>mission 2</span>*/}
-                        {/*    </Link>*/}
-                        {/*</li>*/}
-                        {/*<li className="nav-item">*/}
-                        {/*    <Link className="nav-link" to="/codeblock3">*/}
-                        {/*        <span style={{ fontSize: '30px' }}>mission 3</span>*/}
-                        {/*    </Link>*/}
-                        {/*</li>*/}
-                        {/*<li className="nav-item">*/}
-                        {/*    <Link className="nav-link" to="/codeblock4">*/}
-                        {/*        <span style={{ fontSize: '30px' }}>mission 4</span>*/}
-                        {/*    </Link>*/}
-                        {/*</li>*/}
                     </ul>
                 </div>
             </div>
         </nav>
     );
-
 };
 
 export default Navbar;

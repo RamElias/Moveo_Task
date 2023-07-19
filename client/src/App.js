@@ -5,17 +5,18 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
 import LobbyPage from './components/LobbyPage';
 import CodeBlockPage from './components/CodeBlockPage';
-import '../node_modules/highlight.js/styles/magula.css'
 
 function App() {
     return (
-        <Router>
-            <Navbar/>
-            <Routes>
-                <Route exact path="/" element={<LobbyPage />} />
-                <Route path="/codeblock/:id" element={<CodeBlockPage />} />
-            </Routes>
-        </Router>
+        <div style= {{ backgroundImage: 'linear-gradient(to right, #4e61fe, #0097ff, #00beff, #62def8, #c5f8f6)', height: '100vh' }}>
+            <Router>
+                <Navbar />
+                <Routes>
+                    <Route exact path="/" element={<LobbyPage />} />
+                    <Route path="/codeblock/:id" element={<CodeBlockPage />} />
+                </Routes>
+            </Router>
+        </div>
     );
 }
 

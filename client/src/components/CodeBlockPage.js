@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import hljs from 'highlight.js';
-import 'highlight.js/styles/default.css'; // Import the highlight.js default CSS
 import Highlight from 'react-highlight';
 
 const CodeBlockPage = () => {
     const { id } = useParams();
     const [codeBlock, setCodeBlock] = useState({ title: '', code: '', solution: ''});
+    const [buttonClicked, setButtonClicked] = useState(false);
     const [showSmiley, setShowSmiley] = useState(false);
     const ws = useRef(null);
 
@@ -16,7 +15,6 @@ const CodeBlockPage = () => {
             .then((response) => response.json())
             .then((data) => {
                 setCodeBlock(data);
-                hljs.highlightAll();
             });
 
         // Establish WebSocket connection
@@ -28,7 +26,6 @@ const CodeBlockPage = () => {
             if (updatedId === id) {
                 setCodeBlock((prevBlock) => ({ ...prevBlock, code: updatedCode }));
             }
-            hljs.highlightAll();
         };
 
         return () => {
@@ -40,23 +37,21 @@ const CodeBlockPage = () => {
     const handleCodeChange = (event) => {
         const updatedCode = event.target.value;
         setCodeBlock((prevBlock) => ({...prevBlock, code: updatedCode}));
-        hljs.highlightAll();
         // Send the code update to the server
         ws.current.send(JSON.stringify({ id, code: updatedCode }));
     };
 
     const handleCheckCode = () => {
-        console.log(codeBlock.code);
-        console.log(codeBlock.solution);
-        if (codeBlock.code.trim() === codeBlock.solution.trim()) {
-            console.log("equal");
-            // Code matches the solution
+        setButtonClicked(true);
+        setTimeout(() => setButtonClicked(false), 5000); // Display for 3 seconds
+
+        const trimmedCode = codeBlock.code.trim().replace(/\r\n/g, '\n');
+        const trimmedSolution = codeBlock.solution.trim().replace(/\r\n/g, '\n');
+
+        if (trimmedCode === trimmedSolution) // Code matches the solution
             setShowSmiley(true);
-            setTimeout(() => setShowSmiley(false), 3000); // Display for 3 seconds
-        } else {
-            // Code does not match the solution
+        else // Code does not match the solution
             setShowSmiley(false);
-        }
     };
 
 
@@ -64,13 +59,12 @@ const CodeBlockPage = () => {
         <div className="container-fluid">
             <div className="row justify-content-center mt-5">
                 <div className="col-lg-12">
-                    <h1 className="text-center">Code Block {id}</h1>
-                    <h2 className="text-center">{codeBlock.title}</h2>
+                    <div className="text-center" style={{ fontFamily: 'Tahoma', fontSize: '3rem' }}>{codeBlock.title} </div>
                     <div className="row">
                         <div className="col-6">
               <textarea
                   className="form-control"
-                  rows="15"
+                  rows="10"
                   value={codeBlock.code}
                   onChange={handleCodeChange}
               />
@@ -85,16 +79,17 @@ const CodeBlockPage = () => {
                         <button className="btn btn-primary" onClick={handleCheckCode}>
                             Check Code
                         </button>
-                        {showSmiley && (
+                        {buttonClicked &&(
+                        showSmiley ? (
                             <div>
                                 <p className="text-success">Success! Keep up the good work! 😃</p>
                             </div>
-                        )}
-                        {!showSmiley && (
+                        ) :(
                             <div>
                                 <p className="text-danger">Try again! You can do it! 😢</p>
                             </div>
-                        )}
+                        )
+                            )}
                     </div>
                 </div>
             </div>
