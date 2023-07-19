@@ -2,10 +2,13 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const mysql = require('mysql2');
+const cors = require('cors'); // Import the cors module
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+
+app.use(cors());
 
 const db = mysql.createConnection({
     host: 'containers-us-west-110.railway.app',
