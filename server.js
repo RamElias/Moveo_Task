@@ -38,6 +38,11 @@ app.get('/api/codeblocks', (req, res) => {
     });
 });
 
+app.get('/ram', (req, res) => {
+    console.log("Eli")
+    res.send('water');
+});
+
 // API endpoint to fetch a specific code block by ID from the database
 app.get('/api/codeblocks/:id', (req, res) => {
     const { id } = req.params;
