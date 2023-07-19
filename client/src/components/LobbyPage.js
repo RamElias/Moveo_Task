@@ -20,7 +20,7 @@ function LobbyPage() {
                     <div key={block.id} className="col-md-6 mb-4">
                         <div className="card h-100 shadow" >
                             <div className="card-body d-flex align-items-center justify-content-center"
-                                 style= {{ backgroundImage: 'linear-gradient(to right bottom, #f3f5ab, #ccf7bd, #adf6d5, #9df0eb, #a1e8f8)', height: '150px' }} >
+                                 style= {{ backgroundImage: 'linear-gradient(to right bottom, #45ddf4, #6be6f4, #88eef6, #a2f7f8, #bafffc)', height: '150px' }} >
                                 <Link to={`/codeblock/${block.id}`} className="text-decoration-none">
                                     <h5 className="card-title text-center" style={{ fontFamily: 'Lucida Console', fontSize: '2rem' }}>{block.title}</h5>
                                 </Link>

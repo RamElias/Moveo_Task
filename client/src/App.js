@@ -8,7 +8,7 @@ import CodeBlockPage from './components/CodeBlockPage';
 
 function App() {
     return (
-        <div style= {{ backgroundImage: 'linear-gradient(to right, #4e61fe, #0097ff, #00beff, #62def8, #c5f8f6)', height: '100vh' }}>
+        <div style= {{ backgroundImage: 'linear-gradient(to right, #4e61fe, #0097ff, #00beff, #62def8, #c5f8f6)', height: '120vh' }}>
             <Router>
                 <Navbar />
                 <Routes>
