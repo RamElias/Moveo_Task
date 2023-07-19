@@ -2,8 +2,8 @@
   "name": "moveo_task",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently \"npm run start-client\" \"npm run start-server\"",
-    "start-client": "cd client && npm start",
+    "start": "../node_modules/.bin/concurrently \\\"npm run start-client\\\" \\\"npm run start-server\\\"",
+    "start-client": "cd ../client && npm start",
     "start-server": "node server.js",
     "build": "npm install",
     "proxy": "http://localhost:5000"
