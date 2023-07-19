@@ -27,6 +27,7 @@ db.connect((err) => {
 
 // API endpoint to fetch code blocks from the database
 app.get('/api/codeblocks', (req, res) => {
+    console.log("eli2");
     const query = 'SELECT id, title FROM code_blocks';
     db.query(query, (err, results) => {
         if (err) {
