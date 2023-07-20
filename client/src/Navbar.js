@@ -24,7 +24,14 @@ const Navbar = () => {
                 <div className={`collapse navbar-collapse ${isNavbarOpen ? 'show' : ''}`}>
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/">
+                            <Link className="nav-link"
+                                  to="/"
+                                  style={{
+                                      color: 'white',
+                                      fontSize: '24px',
+                                      fontWeight: 'bold',
+                                      paddingLeft: '10px',
+                                  }}>
                                 Home
                             </Link>
                         </li>

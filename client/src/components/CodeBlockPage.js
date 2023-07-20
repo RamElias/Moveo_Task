@@ -7,21 +7,21 @@ const CodeBlockPage = () => {
     const [codeBlock, setCodeBlock] = useState({ title: '', code: '', solution: ''});
     const [buttonClicked, setButtonClicked] = useState(false);
     const [showSmiley, setShowSmiley] = useState(false);
-    const ws = useRef(null);
+    const wss = useRef(null);
 
     useEffect(() => {
         // Fetch the initial code block
-        fetch(`/api/codeblocks/${id}`)
+        fetch(`https://moveotask-server.up.railway.app/api/codeblocks/${id}`)
             .then((response) => response.json())
             .then((data) => {
                 setCodeBlock(data);
             });
 
         // Establish WebSocket connection
-        ws.current = new WebSocket('ws://localhost:5000');
+        wss.current = new WebSocket('wss://moveotask-server.up.railway.app/');
 
         // Listen for code updates from the server
-        ws.current.onmessage = (event) => {
+        wss.current.onmessage = (event) => {
             const { id: updatedId, code: updatedCode } = JSON.parse(event.data);
             if (updatedId === id) {
                 setCodeBlock((prevBlock) => ({ ...prevBlock, code: updatedCode }));
@@ -30,7 +30,7 @@ const CodeBlockPage = () => {
 
         return () => {
             // Close WebSocket connection when component unmounts
-            ws.current.close();
+            wss.current.close();
         };
     }, [id]);
 
@@ -38,7 +38,7 @@ const CodeBlockPage = () => {
         const updatedCode = event.target.value;
         setCodeBlock((prevBlock) => ({...prevBlock, code: updatedCode}));
         // Send the code update to the server
-        ws.current.send(JSON.stringify({ id, code: updatedCode }));
+        wss.current.send(JSON.stringify({ id, code: updatedCode }));
     };
 
     const handleCheckCode = () => {
@@ -60,8 +60,8 @@ const CodeBlockPage = () => {
             <div className="row justify-content-center mt-5">
                 <div className="col-lg-12">
                     <div className="text-center" style={{ fontFamily: 'Tahoma', fontSize: '3rem' }}>{codeBlock.title} </div>
-                    <div className="row">
-                        <div className="col-6">
+                    <div className="row justify-content-center mt-5">
+                        <div className="col-5">
               <textarea
                   className="form-control"
                   rows="10"
@@ -69,7 +69,7 @@ const CodeBlockPage = () => {
                   onChange={handleCodeChange}
               />
                         </div>
-                        <div className="col-6">
+                        <div className="col-5">
               <pre className="form-control" style={{ whiteSpace: 'pre-wrap' }}>
                 <Highlight className="javascript">{codeBlock.code}</Highlight>
               </pre>

@@ -6,9 +6,12 @@ function LobbyPage() {
 
     useEffect(() => {
         // Fetch code blocks from the server
-        fetch('/api/codeblocks')
+        fetch('https://moveotask-server.up.railway.app/api/codeblocks')
             .then((response) => response.json())
-            .then((data) => setCodeBlocks(data))
+            .then((data) => {
+                setCodeBlocks(data);
+                console.log('Response data:', data);
+            })
             .catch((error) => console.error('Error fetching code blocks:', error));
     }, []);
 
