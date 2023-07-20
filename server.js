@@ -6,6 +6,8 @@ const WebSocket = require('ws');
 const { getCodeBlocksArray } = require('./controllers/codeBlockController');
 const codeBlocks = getCodeBlocksArray();
 
+console.log(`codeBlocks${codeBlocks}`);
+
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
@@ -18,6 +20,7 @@ app.use('/api/codeblocks', codeBlockRoutes);
 // WebSocket event handling
 wss.on('connection', (ws) => {
     console.log('A user connected');
+    console.log(`codeBlocks${codeBlocks}`);
 
     // Listen for code updates from clients
     ws.on('message', (data) => {
