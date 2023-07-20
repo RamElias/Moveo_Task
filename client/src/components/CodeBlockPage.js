@@ -1,13 +1,13 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {useParams} from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import Highlight from 'react-highlight';
 
 const CodeBlockPage = () => {
-    const {id} = useParams();
-    const [codeBlock, setCodeBlock] = useState({title: '', code: '', solution: ''});
+    const { id } = useParams();
+    const [codeBlock, setCodeBlock] = useState({ title: '', code: '', solution: '' });
     const [buttonClicked, setButtonClicked] = useState(false);
     const [showSmiley, setShowSmiley] = useState(false);
-    const [isMentor, setIsMentor] = useState(false);
+    const [isMentor, setIsMentor] = useState(null);
     const wss = useRef(null);
 
     useEffect(() => {
@@ -21,17 +21,17 @@ const CodeBlockPage = () => {
         // Establish WebSocket connection
         wss.current = new WebSocket('wss://moveotask-server.up.railway.app/');
 
-        // Listen for code updates from the server
         wss.current.onmessage = (event) => {
-            const {id: updatedId, code: updatedCode} = JSON.parse(event.data);
+            const { id: updatedId, code: updatedCode, isMentor: updatedIsMentor } = JSON.parse(event.data);
             if (updatedId === id) {
-                setCodeBlock((prevBlock) => ({...prevBlock, code: updatedCode}));
+                setCodeBlock((prevBlock) => ({ ...prevBlock, code: updatedCode }));
+                setIsMentor(updatedIsMentor); // Update the mentor state
             }
         };
 
-        // Set the mentor state to true when the WebSocket connection is opened
-        wss.current.onopen = () => {
-            setIsMentor(true);
+        // Set the mentor state to false when the WebSocket connection is closed
+        wss.current.onclose = () => {
+            setIsMentor(false);
         };
 
         return () => {
