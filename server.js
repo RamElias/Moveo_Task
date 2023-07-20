@@ -82,6 +82,7 @@ wss.on('connection', (ws) => {
     console.log('A user connected');
 
     const isMentor = wss.clients.size === 1;
+    console.log(`clients: ${wss.clients.size}`)
 
     // Listen for code updates from clients
     ws.on('message', (data) => {
