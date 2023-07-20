@@ -34,6 +34,7 @@ const CodeBlockPage = () => {
         };
     }, [id]);
 
+    //handle the code changes and send to the socket
     const handleCodeChange = (event) => {
         const updatedCode = event.target.value;
         setCodeBlock((prevBlock) => ({...prevBlock, code: updatedCode}));
@@ -41,6 +42,7 @@ const CodeBlockPage = () => {
         wss.current.send(JSON.stringify({ id, code: updatedCode }));
     };
 
+    // handle the change and set the smiley according to the solution
     const handleCheckCode = () => {
         setButtonClicked(true);
         setTimeout(() => setButtonClicked(false), 5000); // Display for 3 seconds

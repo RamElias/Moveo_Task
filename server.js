@@ -10,6 +10,7 @@ const wss = new WebSocket.Server({ server });
 
 app.use(cors());
 
+//MySQL in railway
 const db = mysql.createConnection({
     host: 'containers-us-west-110.railway.app',
     user: 'root',
@@ -30,7 +31,6 @@ db.connect((err) => {
 
 // API endpoint to fetch code blocks from the database
 app.get('/api/codeblocks', (req, res) => {
-    console.log("eli2");
     const query = 'SELECT id, title FROM code_blocks';
     db.query(query, (err, results) => {
         if (err) {
@@ -38,14 +38,8 @@ app.get('/api/codeblocks', (req, res) => {
             res.status(500).json({ error: 'Internal server error' });
         } else {
             res.json(results);
-            console.log('Request URL path:', req.url);
         }
     });
-});
-
-app.get('/ram', (req, res) => {
-    console.log("Eli")
-    res.send('water');
 });
 
 // API endpoint to fetch a specific code block by ID from the database

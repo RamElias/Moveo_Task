@@ -1,3 +1,5 @@
+--A SQL file is ready to be run for use in databases other than those in the program
+
 CREATE DATABASE IF NOT EXISTS moveo_task;
 
 USE moveo_task;
