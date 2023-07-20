@@ -1,6 +1,6 @@
 # Real-Time Coding Web Application
 
-## website available at [realtimecoding](realtimecoding.up.railway.app)
+## website available at https://realtimecoding.up.railway.app/
 ## Introduction
 
 This is a real-time coding web application that allows a mentor to share a piece of code with a student and observe him while he writes and changes the code in real-time. The application has two main pages: the Lobby page and the Code block page.
