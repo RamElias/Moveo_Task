@@ -81,6 +81,8 @@ fetchCodeBlocks();
 wss.on('connection', (ws) => {
     console.log('A user connected');
 
+    const isMentor = wss.clients.size === 1;
+
     // Listen for code updates from clients
     ws.on('message', (data) => {
         const { id, code } = JSON.parse(data);
@@ -90,7 +92,7 @@ wss.on('connection', (ws) => {
             // Broadcast the code update to all connected clients
             wss.clients.forEach((client) => {
                 if (client !== ws && client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ id, code }));
+                    client.send(JSON.stringify({ id, code, isMentor }));
                 }
             });
         }

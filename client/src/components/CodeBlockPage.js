@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState, useRef} from 'react';
+import {useParams} from 'react-router-dom';
 import Highlight from 'react-highlight';
 
 const CodeBlockPage = () => {
-    const { id } = useParams();
-    const [codeBlock, setCodeBlock] = useState({ title: '', code: '', solution: ''});
+    const {id} = useParams();
+    const [codeBlock, setCodeBlock] = useState({title: '', code: '', solution: ''});
     const [buttonClicked, setButtonClicked] = useState(false);
     const [showSmiley, setShowSmiley] = useState(false);
+    const [isMentor, setIsMentor] = useState(false);
     const wss = useRef(null);
 
     useEffect(() => {
@@ -22,10 +23,15 @@ const CodeBlockPage = () => {
 
         // Listen for code updates from the server
         wss.current.onmessage = (event) => {
-            const { id: updatedId, code: updatedCode } = JSON.parse(event.data);
+            const {id: updatedId, code: updatedCode} = JSON.parse(event.data);
             if (updatedId === id) {
-                setCodeBlock((prevBlock) => ({ ...prevBlock, code: updatedCode }));
+                setCodeBlock((prevBlock) => ({...prevBlock, code: updatedCode}));
             }
+        };
+
+        // Set the mentor state to true when the WebSocket connection is opened
+        wss.current.onopen = () => {
+            setIsMentor(true);
         };
 
         return () => {
@@ -39,7 +45,7 @@ const CodeBlockPage = () => {
         const updatedCode = event.target.value;
         setCodeBlock((prevBlock) => ({...prevBlock, code: updatedCode}));
         // Send the code update to the server
-        wss.current.send(JSON.stringify({ id, code: updatedCode }));
+        wss.current.send(JSON.stringify({id, code: updatedCode}));
     };
 
     // handle the change and set the smiley according to the solution
@@ -61,37 +67,48 @@ const CodeBlockPage = () => {
         <div className="container-fluid">
             <div className="row justify-content-center mt-5">
                 <div className="col-lg-12">
-                    <div className="text-center" style={{ fontFamily: 'Tahoma', fontSize: '3rem' }}>{codeBlock.title} </div>
+                    <div className="text-center"
+                         style={{fontFamily: 'Tahoma', fontSize: '3rem'}}>{codeBlock.title} </div>
                     <div className="row justify-content-center mt-5">
-                        <div className="col-5">
+                        {isMentor ? ( // Mentor View: Show the code block in read-only mode
+                            <div className="col-10">
+                                <pre className="form-control" style={{whiteSpace: 'pre-wrap'}}>
+                                    <Highlight className="javascript">{codeBlock.code}</Highlight>
+                                </pre>
+                            </div>
+                        ) : ( // Student View: Allow the student to edit the code
+                            <div className="row justify-content-center mt-5">
+                                <div className="col-5">
               <textarea
                   className="form-control"
                   rows="10"
                   value={codeBlock.code}
                   onChange={handleCodeChange}
               />
-                        </div>
-                        <div className="col-5">
-              <pre className="form-control" style={{ whiteSpace: 'pre-wrap' }}>
+                                </div>
+                                <div className="col-5">
+              <pre className="form-control" style={{whiteSpace: 'pre-wrap'}}>
                 <Highlight className="javascript">{codeBlock.code}</Highlight>
               </pre>
-                        </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="text-center mt-3">
                         <button className="btn btn-primary" onClick={handleCheckCode}>
                             Check Code
                         </button>
-                        {buttonClicked &&(
-                        showSmiley ? (
-                            <div>
-                                <p className="text-success">Success! Keep up the good work! 😃</p>
-                            </div>
-                        ) :(
-                            <div>
-                                <p className="text-danger">Try again! You can do it! 😢</p>
-                            </div>
-                        )
-                            )}
+                        {buttonClicked && (
+                            showSmiley ? (
+                                <div>
+                                    <p className="text-success">Success! Keep up the good work! 😃</p>
+                                </div>
+                            ) : (
+                                <div>
+                                    <p className="text-danger">Try again! You can do it! 😢</p>
+                                </div>
+                            )
+                        )}
                     </div>
                 </div>
             </div>
