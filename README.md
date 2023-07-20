@@ -21,7 +21,7 @@ This is a real-time coding web application that allows a mentor to share a piece
 2. Install the required dependencies using `npm install`.
 3. Start the server using `node server.js` or `npm start`
 4. open a new terminal and type `cd client`
-5. run `npm start`
+5. run `npm run dev`
 6. The application will be accessible at `http://localhost:3000`.
 
 ## API Endpoints
@@ -32,10 +32,13 @@ This is a real-time coding web application that allows a mentor to share a piece
 ## WebSocket
 
 WebSocket is utilized to provide real-time updates of the code block between the mentor and students.
-When a student makes changes to the code, the WebSocket sends the updated code to all connected clients in real-time.
+When a student makes changes to the code, the WebSocket sends the updated code to all connected clients in real time.
 
 ## Technologies Used
 
 - **Frontend:** React
 - **Backend:** Express, MySQL (for database storage), WebSocket (for real-time updates)
+
+## Bugs
+- The mentor gets into read-only mode only after the student starts writing.
 
